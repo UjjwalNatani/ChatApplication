@@ -131,7 +131,7 @@ const Chat = ({ token, initialUsername }) => {
                           color="primary"
                           aria-label="save"
                           size="small"
-                          style={{ fontSize: '0.7rem', padding: '4px' }}
+                          style={{ fontSize: '0.7vh', padding: '4px' }}
                           onClick={() => handleEdit(msg._id)}
                         >
                           <SaveIcon style={{ fontSize: 'inherit' }}/>
