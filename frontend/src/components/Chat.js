@@ -131,7 +131,7 @@ const Chat = ({ token, initialUsername }) => {
                           color="primary"
                           aria-label="save"
                           size="small"
-                          style={{ fontSize: '1vh', padding: '4px' }}
+                          style={{ fontSize: '1vw', padding: '4px' }}
                           onClick={() => handleEdit(msg._id)}
                         >
                           <SaveIcon style={{ fontSize: 'inherit' }}/>
@@ -141,7 +141,7 @@ const Chat = ({ token, initialUsername }) => {
                           color="primary"
                           aria-label="cancel"
                           size="small"
-                          style={{ fontSize: '1vh', padding: '4px' }}
+                          style={{ fontSize: '1vw', padding: '4px' }}
                           onClick={() => setEditingMessageId(null)}
                         >
                           <CancelIcon style={{ fontSize: 'inherit' }}/>
@@ -153,7 +153,7 @@ const Chat = ({ token, initialUsername }) => {
                           color="primary"
                           aria-label="edit"
                           size="small"
-                          style={{ fontSize: '1vh', padding: '4px' }}
+                          style={{ fontSize: '1vw', padding: '4px' }}
                           onClick={() => {
                             setEditingMessageId(msg._id);
                             setEditingContent(msg.message);
@@ -166,7 +166,7 @@ const Chat = ({ token, initialUsername }) => {
                           color="primary"
                           aria-label="delete"
                           size="small"
-                          style={{ fontSize: '1vh', padding: '4px' }}
+                          style={{ fontSize: '1vw', padding: '4px' }}
                           onClick={() => handleDelete(msg._id)}
                         >
                           <DeleteIcon style={{ fontSize: 'inherit' }}/>
