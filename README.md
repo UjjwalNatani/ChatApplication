@@ -4,6 +4,13 @@
 
 This real-time chat application allows users to communicate with each other instantly. It provides features like sending, editing, and deleting messages in a chat room environment. The application is built using React for the frontend, Node.js and Express for the backend, and Socket.IO for real-time communication.
 
+## Demo Credentials
+
+Demo credentials for easy testing without the need to sign up
+
+username: demo
+password: password
+
 ## Features
 
 - **Real-Time Messaging**: Messages are sent and received in real-time, allowing users to have instant conversations.
