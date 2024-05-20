@@ -131,18 +131,20 @@ const Chat = ({ token, initialUsername }) => {
                           color="primary"
                           aria-label="save"
                           size="small"
+                          style={{ fontSize: '0.7rem', padding: '4px' }}
                           onClick={() => handleEdit(msg._id)}
                         >
-                          <SaveIcon/>
+                          <SaveIcon style={{ fontSize: 'inherit' }}/>
                         </IconButton>
 
                         <IconButton
                           color="primary"
                           aria-label="cancel"
                           size="small"
+                          style={{ fontSize: '0.7rem', padding: '4px' }}
                           onClick={() => setEditingMessageId(null)}
                         >
-                          <CancelIcon/>
+                          <CancelIcon style={{ fontSize: 'inherit' }}/>
                         </IconButton>
                       </>
                     ) : (
@@ -151,21 +153,23 @@ const Chat = ({ token, initialUsername }) => {
                           color="primary"
                           aria-label="edit"
                           size="small"
+                          style={{ fontSize: '0.7rem', padding: '4px' }}
                           onClick={() => {
                             setEditingMessageId(msg._id);
                             setEditingContent(msg.message);
                           }}
                         >
-                          <EditIcon/>
+                          <EditIcon style={{ fontSize: 'inherit' }}/>
                         </IconButton>
 
                         <IconButton
                           color="primary"
                           aria-label="delete"
                           size="small"
+                          style={{ fontSize: '0.7rem', padding: '4px' }}
                           onClick={() => handleDelete(msg._id)}
                         >
-                          <DeleteIcon/>
+                          <DeleteIcon style={{ fontSize: 'inherit' }}/>
                         </IconButton>
                       </>
                     )}
