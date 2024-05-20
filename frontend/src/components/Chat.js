@@ -9,7 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-const socket = io('http://localhost:5000'); // Backend URL
+const socket = io('https://chatapplication-backend-lbvd.onrender.com'); // Backend URL
 
 const Chat = ({ token, initialUsername }) => {
   const [messages, setMessages] = useState([]);
@@ -22,7 +22,7 @@ const Chat = ({ token, initialUsername }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/messages', {
+        const res = await axios.get('https://chatapplication-backend-lbvd.onrender.com/api/messages', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setMessages(res.data);
@@ -63,7 +63,7 @@ const Chat = ({ token, initialUsername }) => {
 
   const handleLogout = async (action) => {
     try {
-      await axios.post('http://localhost:5000/', { action });
+      await axios.post('https://chatapplication-backend-lbvd.onrender.com/', { action });
     } catch (error) {
       console.error('Error logging out:', error);
     } finally {
@@ -75,7 +75,7 @@ const Chat = ({ token, initialUsername }) => {
 
   const handleEdit = async (id) => {
     try {
-      const res = await axios.put(`http://localhost:5000/api/messages/${id}`, { message: editingContent }, {
+      const res = await axios.put(`https://chatapplication-backend-lbvd.onrender.com/api/messages/${id}`, { message: editingContent }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setEditingMessageId(null);
@@ -92,7 +92,7 @@ const Chat = ({ token, initialUsername }) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/messages/${id}`, {
+      await axios.delete(`https://chatapplication-backend-lbvd.onrender.com/api/messages/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessages(messages.filter((msg) => msg._id !== id));

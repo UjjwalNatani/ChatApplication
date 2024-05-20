@@ -13,7 +13,7 @@ const Login = ({ setToken }) => {
   const handleSubmit = async (e, action) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/', { username, password, rePassword, action });
+      const res = await axios.post('https://chatapplication-backend-lbvd.onrender.com/', { username, password, rePassword, action });
       if (action === 'login') {
         setToken(res.data.token);
         setUsername(res.data.username);
