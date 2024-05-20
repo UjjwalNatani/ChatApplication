@@ -5,11 +5,11 @@ const router = express.Router();
 
 router.get('/', auth, async (req, res) => {
     try {
-      const messages = await Message.find().sort({ timestamp: -1 });
+      const messages = await Message.find().sort({ timestamp: 1 });
       res.json(messages);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Server error' });
+      res.status(500).json({ message: 'Error fetching messages' });
     }
   });
 
