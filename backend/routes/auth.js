@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const router = express.Router();
 const JWT_SECRET = 'itispersonal';
-
+  
 router.use(bodyParser.json());
 router.use(cors());
 
