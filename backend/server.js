@@ -9,27 +9,11 @@ const Message = require('./models/Message');
 
 const app = express();
 const server = http.createServer(app);
-
-const allowedOrigins = [
-  'https://main--chatapplication0.netlify.app',
-  'https://chatapplication0.netlify.app/'
-];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST'],
-};
-
-app.use(cors(corsOptions));
-
 const io = socketIo(server, {
-  cors: corsOptions,
+  cors: {
+    origin: "https://chatapplication0.netlify.app", // React app URL
+    methods: ["GET", "POST"]
+  }
 });
 
 const PORT = process.env.PORT || 5000;
