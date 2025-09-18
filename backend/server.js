@@ -17,7 +17,7 @@ const io = socketIo(server, {
 });
 
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = 'mongodb+srv://ujjwalnatani10:hepcRNRQlNTuLxBW@cluster0.qbxjzhq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
+const MONGO_URI = 'mongodb+srv://ujjwalnatani10:Ugnatani1@cluster0.yxotofl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';
 
 mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
