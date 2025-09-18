@@ -11,7 +11,11 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "https://main--chatapplication0.netlify.app", // React app URL
+    origin: [
+      "http://localhost:3000",
+      "https://chatapplication0.netlify.app",
+      "https://main--chatapplication0.netlify.app"
+    ],
     methods: ["GET", "POST"]
   }
 });

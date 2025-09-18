@@ -9,20 +9,38 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-const socket = io('https://chatapplication-backend-lbvd.onrender.com'); // Backend URL
+const BACKEND_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:5000'
+  : 'https://chatapplication-backend-lbvd.onrender.com';
 
-const Chat = ({ token, initialUsername }) => {
+const socket = io(BACKEND_URL); // Backend URL
+
+const Chat = ({ token, username }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
-  const [username, setUsername] = useState(initialUsername);
   const [editingMessageId, setEditingMessageId] = useState(null);
   const [editingContent, setEditingContent] = useState('');
+  const [resolvedUsername, setResolvedUsername] = useState(username || '');
+  const [usernameInput, setUsernameInput] = useState('');
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    if (!resolvedUsername) {
+      const stored = localStorage.getItem('username');
+      if (stored) setResolvedUsername(stored);
+    }
+  }, [resolvedUsername]);
+
+  useEffect(() => {
+    if (username && username !== resolvedUsername) {
+      setResolvedUsername(username);
+    }
+  }, [username]);
 
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const res = await axios.get('https://chatapplication-backend-lbvd.onrender.com/api/messages', {
+        const res = await axios.get(`${BACKEND_URL}/api/messages`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setMessages(res.data);
@@ -33,21 +51,15 @@ const Chat = ({ token, initialUsername }) => {
     fetchMessages();
 
     socket.on('message', (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+      const normalized = {
+        ...message,
+        username: message?.username ?? resolvedUsername ?? 'Unknown'
+      };
+      setMessages((prevMessages) => [...prevMessages, normalized]);
     });
 
     return () => socket.off('message');
   }, [token]);
-
-  useEffect(() => {
-    // Set username from local storage if not set
-    if (!username) {
-      const storedUsername = localStorage.getItem('username');
-      if (storedUsername) {
-        setUsername(storedUsername);
-      }
-    }
-  }, [username]);
 
   useEffect(() => {
     // Scroll to the bottom whenever messages change
@@ -56,14 +68,20 @@ const Chat = ({ token, initialUsername }) => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    const newMessage = { username: username, message: input };
+    if (!input.trim()) return;
+    const currentUsername = resolvedUsername || localStorage.getItem('username');
+    if (!currentUsername) {
+      console.error('Username missing; cannot send message');
+      return;
+    }
+    const newMessage = { username: currentUsername, message: input.trim() };
     socket.emit('message', newMessage);
     setInput('');
   };
 
   const handleLogout = async (action) => {
     try {
-      await axios.post('https://chatapplication-backend-lbvd.onrender.com/', { action });
+      await axios.post(`${BACKEND_URL}/`, { action });
     } catch (error) {
       console.error('Error logging out:', error);
     } finally {
@@ -75,7 +93,7 @@ const Chat = ({ token, initialUsername }) => {
 
   const handleEdit = async (id) => {
     try {
-      const res = await axios.put(`https://chatapplication-backend-lbvd.onrender.com/api/messages/${id}`, { message: editingContent }, {
+      const res = await axios.put(`${BACKEND_URL}/api/messages/${id}`, { message: editingContent }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setEditingMessageId(null);
@@ -92,7 +110,7 @@ const Chat = ({ token, initialUsername }) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://chatapplication-backend-lbvd.onrender.com/api/messages/${id}`, {
+      await axios.delete(`${BACKEND_URL}/api/messages/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMessages(messages.filter((msg) => msg._id !== id));
@@ -108,16 +126,25 @@ const Chat = ({ token, initialUsername }) => {
         <button onClick={() => handleLogout("logout")} className="logout-button">Logout</button>
       </div>
       <div className='chat-content'>
+        {!resolvedUsername && (
+          <div style={{ padding: '1rem' }}>
+            <p>Please enter a username to continue:</p>
+            <form onSubmit={(e) => { e.preventDefault(); if (!usernameInput.trim()) return; const u = usernameInput.trim(); localStorage.setItem('username', u); setResolvedUsername(u); setUsernameInput(''); }}>
+              <input type="text" value={usernameInput} onChange={(e) => setUsernameInput(e.target.value)} placeholder="Username" className='input-field' />
+              <button type="submit" className='submit-button' style={{ marginLeft: 8 }}>Save</button>
+            </form>
+          </div>
+        )}
         <div className='chat-messages'>
           {messages.map((msg) => (
             <div key={msg._id} className="message">
               <div className="message-content">
-                <strong>{msg.username}</strong>: {msg.message}
+                <strong>{msg.username || resolvedUsername || 'Unknown'}</strong>: {msg.message}
               </div>
               <div className="message-meta">
                 {format(new Date(msg.timestamp), 'p, MMMM dd yyyy')}
                 {msg.edited && <span> (Edited)</span>}
-                {msg.username === username && (
+                {msg.username === resolvedUsername && (
                   <span className="message-actions">
                     {editingMessageId === msg._id ? (
                       <>
@@ -188,8 +215,9 @@ const Chat = ({ token, initialUsername }) => {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Enter message"
               style={{ width: '80%', height: '5vh' }}
+              disabled={!resolvedUsername}
             />
-            <button type="submit" className="send-button">Send</button>
+            <button type="submit" className="send-button" disabled={!resolvedUsername}>Send</button>
           </form>
         </div>
       </div>
